@@ -1,5 +1,5 @@
-#ifndef __QOI_CODEC_H__
-#define __QOI_CODEC_H__
+#ifndef QOI_QOI_H_
+#define QOI_QOI_H_
 
 #include "utils.h"
 
@@ -58,7 +58,7 @@ bool qoi_encode(uint32_t width, uint32_t height, uint8_t channels, uint8_t color
     /* qoi-data part */
     int run = 0;
     int px_num = width * height;
-    
+
     uint8_t history[64][4];
     memset(history, 0, sizeof(history));
 
@@ -70,11 +70,11 @@ bool qoi_encode(uint32_t width, uint32_t height, uint8_t channels, uint8_t color
     pre_b = 0u;
     pre_a = 255u;
 
-    for(int i = 0; i < px_num; ++i) {
+    for (int i = 0; i < px_num; ++i) {
         r = qoi_read_u8();
         g = qoi_read_u8();
         b = qoi_read_u8();
-        if(channels == 4) a = qoi_read_u8();
+        if (channels == 4) a = qoi_read_u8();
 
         // TODO
 
@@ -85,7 +85,7 @@ bool qoi_encode(uint32_t width, uint32_t height, uint8_t channels, uint8_t color
     }
 
     /* qoi-padding part */
-    for(int i = 0; i < sizeof(QOI_PADDING); ++i) {
+    for (int i = 0; i < sizeof(QOI_PADDING) / sizeof(QOI_PADDING[0]); ++i) {
         qoi_write_u8(QOI_PADDING[i]);
     }
 
@@ -93,7 +93,7 @@ bool qoi_encode(uint32_t width, uint32_t height, uint8_t channels, uint8_t color
 }
 
 bool qoi_decode(uint32_t &width, uint32_t &height, uint8_t &channels, uint8_t &colorspace) {
-    
+
     char c1 = qoi_read_char();
     char c2 = qoi_read_char();
     char c3 = qoi_read_char();
@@ -101,7 +101,7 @@ bool qoi_decode(uint32_t &width, uint32_t &height, uint8_t &channels, uint8_t &c
     if (c1 != 'q' || c2 != 'o' || c3 != 'i' || c4 != 'f') {
         return false;
     }
-    
+
     // read image width
     width = qoi_read_u32();
     // read image height
@@ -113,29 +113,29 @@ bool qoi_decode(uint32_t &width, uint32_t &height, uint8_t &channels, uint8_t &c
 
     int run = 0;    
     int px_num = width * height;
-    
+
     uint8_t history[64][4];
     memset(history, 0, sizeof(history));
-    
+
     uint8_t r, g, b, a;
     a = 255u;
 
-    for(int i = 0; i < px_num; ++i) {
-        
+    for (int i = 0; i < px_num; ++i) {
+
         // TODO
 
         qoi_write_u8(r);
         qoi_write_u8(g);
         qoi_write_u8(b);
-        if(channels == 4) qoi_write_u8(a);
+        if (channels == 4) qoi_write_u8(a);
     }
 
     bool valid = true;
-    for(int i = 0; i < sizeof(QOI_PADDING); ++i) {
-        if(qoi_read_u8() != QOI_PADDING[i]) valid = false;
+    for (int i = 0; i < sizeof(QOI_PADDING) / sizeof(QOI_PADDING[0]); ++i) {
+        if (qoi_read_u8() != QOI_PADDING[i]) valid = false;
     }
-        
+
     return valid;
 }
 
-#endif // __QOI_CODEC_H__
+#endif // QOI_QOI_H_
