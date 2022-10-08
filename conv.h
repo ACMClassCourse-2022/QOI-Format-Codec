@@ -1,13 +1,13 @@
-#ifndef QOI_CONV_H_
-#define QOI_CONV_H_
+#ifndef QOI_FORMAT_CODEC_CONVERTOR_H_
+#define QOI_FORMAT_CODEC_CONVERTOR_H_
 
-#include <cstdio>
-#include <iostream>
 #include <cstdint>
+#include <cstdio>
 #include <iomanip>
+#include <iostream>
 #include <map>
 
-void rgb2ppm(std::istream &is, std::ostream &os, uint32_t width, uint32_t height) {
+void RgbToPpm(std::istream &is, std::ostream &os, uint32_t width, uint32_t height) {
     if (width == 0 || height == 0 || 1ll * width * height > 1e9) {
         throw "illegal image size";
     }
@@ -30,7 +30,7 @@ void rgb2ppm(std::istream &is, std::ostream &os, uint32_t width, uint32_t height
     }
 }
 
-void ppm2rgb(std::istream &is, std::ostream &os, uint32_t &width, uint32_t &height) {
+void PpmToRgb(std::istream &is, std::ostream &os, uint32_t &width, uint32_t &height) {
 
     std::string magic;
     if (is.eof()) throw "empty input";
@@ -59,17 +59,20 @@ void ppm2rgb(std::istream &is, std::ostream &os, uint32_t &width, uint32_t &heig
         for (int j = 0; j < width; ++j) {
             int temp;
             if (is.eof()) throw "incomplete pixel data";
-            is >> temp; rgb[0] = static_cast<uint8_t>(temp);
+            is >> temp;
+            rgb[0] = static_cast<uint8_t>(temp);
             if (is.eof()) throw "incomplete pixel data";
-            is >> temp; rgb[1] = static_cast<uint8_t>(temp);
+            is >> temp;
+            rgb[1] = static_cast<uint8_t>(temp);
             if (is.eof()) throw "incomplete pixel data";
-            is >> temp; rgb[2] = static_cast<uint8_t>(temp);
+            is >> temp;
+            rgb[2] = static_cast<uint8_t>(temp);
             os.write(reinterpret_cast<const char *>(rgb), 3);
         }
     }
 }
 
-void rgba2pam(std::istream &is, std::ostream &os, uint32_t width, uint32_t height) {
+void RgbaToPam(std::istream &is, std::ostream &os, uint32_t width, uint32_t height) {
     if (width == 0 || height == 0 || 1ll * width * height > 1e9) {
         throw "illegal image size";
     }
@@ -95,10 +98,9 @@ void rgba2pam(std::istream &is, std::ostream &os, uint32_t width, uint32_t heigh
         }
         os << '\n';
     }
-
 }
 
-void pam2rgba(std::istream &is, std::ostream &os, uint32_t &width, uint32_t &height) {
+void PamToRgba(std::istream &is, std::ostream &os, uint32_t &width, uint32_t &height) {
 
     std::string magic;
     if (is.eof()) throw "empty input";
@@ -151,8 +153,7 @@ void pam2rgba(std::istream &is, std::ostream &os, uint32_t &width, uint32_t &hei
                 throw "expect RGB_ALPHA as tupltype but got something else";
             }
         }
-    }
-    while (id != "ENDHDR");
+    } while (id != "ENDHDR");
 
     if (!info["wd"] || !info["ht"] || !info["dp"] || !info["mv"] || !info["tu"]) {
         throw "imcomplete header info";
@@ -167,11 +168,14 @@ void pam2rgba(std::istream &is, std::ostream &os, uint32_t &width, uint32_t &hei
         for (int j = 0; j < width; ++j) {
             int temp;
             if (is.eof()) throw "incomplete pixel data";
-            is >> temp; rgba[3] = static_cast<uint8_t>(temp);
+            is >> temp;
+            rgba[3] = static_cast<uint8_t>(temp);
             if (is.eof()) throw "incomplete pixel data";
-            is >> temp; rgba[0] = static_cast<uint8_t>(temp);
+            is >> temp;
+            rgba[0] = static_cast<uint8_t>(temp);
             if (is.eof()) throw "incomplete pixel data";
-            is >> temp; rgba[1] = static_cast<uint8_t>(temp);
+            is >> temp;
+            rgba[1] = static_cast<uint8_t>(temp);
             if (is.eof()) throw "incomplete pixel data";
             is >> temp; rgba[2] = static_cast<uint8_t>(temp);
             os.write(reinterpret_cast<const char *>(rgba), 4);
@@ -179,4 +183,4 @@ void pam2rgba(std::istream &is, std::ostream &os, uint32_t &width, uint32_t &hei
     }
 }
 
-#endif // QOI_CONV_H_
+#endif // QOI_FORMAT_CODEC_CONVERTOR_H_

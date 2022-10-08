@@ -3,14 +3,14 @@
 #include <iostream>
 #include <map>
 
-#include "qoi.h"
 #include "conv.h"
+#include "qoi.h"
 
-void qoi2pnm(std::string ftype, bool omitted) {
-    auto fname = "temp." + ftype;
+void QoiToPnm(std::string fType, bool omitted) {
+    auto fName = "temp." + fType;
 
     std::fstream temp;
-    temp.open(fname, std::ios::out | std::ios::binary | std::ios::trunc);
+    temp.open(fName, std::ios::out | std::ios::binary | std::ios::trunc);
 
     auto backup = std::cout.rdbuf();
     auto target = temp.rdbuf();
@@ -20,27 +20,27 @@ void qoi2pnm(std::string ftype, bool omitted) {
 
     // .qoi -> .rgb(a)
     std::cout.rdbuf(target); // redirect std::cout to ofstream temp
-    qoi_decode(width, height, channels, colorspace);
+    QoiDecode(width, height, channels, colorspace);
     std::cout.rdbuf(backup); // restore std::cout buffer
 
     // image type check
-    if (ftype == "rgb" && channels != 3) {
+    if (fType == "rgb" && channels != 3) {
         std::cerr << "image type doesnt match the channel number" << std::endl;
-        return;
+        return ;
     }
-    if (ftype == "rgba" && channels != 4) {
+    if (fType == "rgba" && channels != 4) {
         std::cerr << "image type doesnt match the channel number" << std::endl;
         return;
     }
 
     // .rgb(a) -> .ppm/pam
     temp.close();
-    temp.open(fname, std::ios::in | std::ios::binary);
+    temp.open(fName, std::ios::in | std::ios::binary);
     try {
-        if (ftype == "rgb") {
-            rgb2ppm(temp, std::cout, width, height);
+        if (fType == "rgb") {
+            RgbToPpm(temp, std::cout, width, height);
         } else {
-            rgba2pam(temp, std::cout, width, height);
+            RgbaToPam(temp, std::cout, width, height);
         }
     } catch (const char *msg) {
         std::cerr << msg << std::endl;
@@ -50,25 +50,25 @@ void qoi2pnm(std::string ftype, bool omitted) {
     }
     temp.close();
 
-    if (omitted) std::remove(fname.c_str());
+    if (omitted) std::remove(fName.c_str());
 }
 
-void pnm2qoi(std::string ftype, bool omitted) {
-    auto fname = "temp." + ftype;
+void PnmToQoi(std::string fType, bool omitted) {
+    auto fName = "temp." + fType;
 
     std::fstream temp;
-    temp.open(fname, std::ios::out | std::ios::binary | std::ios::trunc);
+    temp.open(fName, std::ios::out | std::ios::binary | std::ios::trunc);
 
     uint32_t width, height;
     uint8_t channels, colorspace;
 
     // .ppm/pam -> .rgb(a)
     try {
-        if (ftype == "rgb") {
-            ppm2rgb(std::cin, temp, width, height);
+        if (fType == "rgb") {
+            PpmToRgb(std::cin, temp, width, height);
             channels = 3u;
         } else {
-            pam2rgba(std::cin, temp, width, height);
+            PamToRgba(std::cin, temp, width, height);
             channels = 4u;
         }
     } catch (const char *msg) {
@@ -79,20 +79,19 @@ void pnm2qoi(std::string ftype, bool omitted) {
     }
 
     temp.close();
-    temp.open(fname, std::ios::in | std::ios::binary);
+    temp.open(fName, std::ios::in | std::ios::binary);
 
     auto backup = std::cin.rdbuf();
     auto target = temp.rdbuf();
 
     // .rgb(a) -> .qoi
     std::cin.rdbuf(target); // redirect std::cin to ifstream temp
-    qoi_encode(width, height, channels, 0u);
+    QoiEncode(width, height, channels, 0u);
     std::cin.rdbuf(backup); // restore std::cin buffer
 
     temp.close();
 
-    if (omitted) std::remove(fname.c_str());
-
+    if (omitted) std::remove(fName.c_str());
 }
 
 int main(int argc, char *argv[]) {
@@ -126,16 +125,12 @@ Examples:
     }
 
     if (args["-e"] && args["-d"]) {
-        std::cerr << "-d and -e options conflict with one anthor, please choose one." << std::endl;
-        return 0;
-    }
-    if (!args["-e"] && !args["-d"]) {
-        std::cerr << "You need at least one of -d and -e." << std::endl;
+        std::cerr << "-d and -e options conflict with one anthor, please choose only one." << std::endl;
         return 0;
     }
 
-    std::string type = args["-4"]? "rgba": "rgb";
-    if (args["-e"]) pnm2qoi(type, args["-o"]);
-    if (args["-d"]) qoi2pnm(type, args["-o"]);
+    std::string type = args["-4"] ? "rgba" : "rgb";
+    if (args["-e"]) PnmToQoi(type, args["-o"]);
+    if (args["-d"]) QoiToPnm(type, args["-o"]);
     return 0;
 }
