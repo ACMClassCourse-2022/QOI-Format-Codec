@@ -23,7 +23,7 @@
 接着进入对应的项目文件夹，右键选择 `Git Bash Here`，在命令行中输入：
 
 ```bash
-git clone ...
+git clone https://github.com/ACMClassCourse-2022/QOI-Format-Codec
 ```
 
 #### 在wsl环境下
@@ -37,7 +37,7 @@ sudo apt-get install git
 接着进入对应的项目文件夹，运行：
 
 ```bash
-git clone ...
+git clone https://github.com/ACMClassCourse-2022/QOI-Format-Codec
 ```
 
 ## 使用其他方式下载项目
@@ -46,4 +46,4 @@ github 也支持以 `.zip` 格式下载项目内容。
 
 <img src="assets/download-as-zip.jpg" alt="" height=300>
 
-将压缩包解压到对应项目文件夹，再使用 clion 或其他开发工具打开即可。
+将压缩包解压到对应项目文件夹，再使用 Clion 或其他开发工具打开即可。
