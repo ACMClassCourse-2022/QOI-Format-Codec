@@ -100,7 +100,7 @@ void qoi_decode(uint2_t &width, uint32_t &height, uint8_t &channels, uint8_t &co
 
 ### 在线评测
 
-在 OJ 对应题目中提交你的程序。
+在 (OJ 对应题目)[https://acm.sjtu.edu.cn/OnlineJudge/homework?homework_id=388] 中提交你的程序。
 
 **请将 `qoi.h` 文件中的完整内容拷贝到提交框中提交**，语言选择自动检测或c++。
 
