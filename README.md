@@ -52,7 +52,11 @@ qoi_header {
 
 6. **QOI_OP_RGBA**
 
-每种压缩方式由自身的标识符和压缩数据构成，保证编解码的唯一性。
+每种压缩方式由自身的标识符和压缩数据构成，保证解码的唯一性。
+
+> 注意到一个像素可能同时满足多种压缩方式的要求，为使编码方式唯一，我们规定**编码优先级**为：
+>
+> QOI_OP_RUN > QOI_OP_INDEX > QOI_OP_DIFF > QOI_OP_LUMA > QOI_OP_RGB / QOI_OP_RGBA
 
 #### qoi-padding
 
@@ -70,9 +74,9 @@ qoi_header {
 void QoiEncode(uint2_t width, uint32_t height, uint8_t channels, uint8_t colorspace);
 ```
 
-接受未压缩的 rgb 序列输入，输出压缩后的 QOI 格式。
+接受未压缩的 rgb(a) 序列输入，输出压缩后的 QOI 格式。
 
-请使用 `QoiReadU8()` 从输入流中读取一个 `r`, `g`, `b` 或 `a` 分量的值，选择相应的压缩方式后，使用 `qoi_write_u8()` 输出。 
+请使用 `QoiReadU8()` 从输入流中读取一个 `r`, `g`, `b` 或 `a` 分量的值，选择相应的压缩方式后，使用 `QoiWriteU8()` 输出。 
 
 ### Decoder 解码器
 
@@ -80,7 +84,7 @@ void QoiEncode(uint2_t width, uint32_t height, uint8_t channels, uint8_t colorsp
 void QoiDecode(uint2_t &width, uint32_t &height, uint8_t &channels, uint8_t &colorspace);
 ```
 
-接受压缩后的 qoi 格式，输出未压缩的 rgb 序列输入。
+接受压缩后的 qoi 格式，输出未压缩的 rgb(a) 序列。
 
 请使用 `QoiReadU8()` 从输入流中读取一个压缩后的像素信息，按照标识符所对应的压缩方式解压，使用 `QoiWriteU8()` 输出 `r`, `g`, `b` 或 `a` 分量的值。
 
