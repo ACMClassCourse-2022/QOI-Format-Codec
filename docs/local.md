@@ -32,9 +32,9 @@
 
 <img src="assets/wsl-terminal.jpg" alt="" height=150>
 
-在 WSL 命令行中运行 `./conv ...` 来使用应用
+在 WSL 命令行中运行 `./conv [options] [<path/to/input/image] [>path/to/output/image]` 来使用应用
 
-运行 `./conv -h` 查看帮助信息
+运行 `./conv -h` 查看应用使用方法详细说明
 
 ### 3. 检查转换结果是否正确
 
