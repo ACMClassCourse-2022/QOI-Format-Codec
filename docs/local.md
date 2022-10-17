@@ -32,9 +32,61 @@
 
 <img src="assets/wsl-terminal.jpg" alt="" height=150>
 
-在 WSL 命令行中运行 `./conv [options] [<path/to/input/image] [>path/to/output/image]` 来使用应用
+在 WSL 命令行中运行 `./conv` 并附上相应参数来使用应用
 
-运行 `./conv -h` 查看应用使用方法详细说明
+> **【参数说明】**
+> 
+> + **格式转换参数** `-d`, `-e`
+>   
+>   使用 `-d` 表示解码 qoi 图像，进行 qoi 到 ppm/pam 类型的转换
+>   
+>   使用 `-e` 表示编码 qoi 图像，进行 ppm/pam 到 qoi 类型的转换
+>   
+>   `-d` 与 `-e` 参数不能同时使用
+> 
+> + **色彩通道参数** `-3`, `-4`
+>   
+>   使用 `-3` 表示图像色彩通道数为3，进行 rgb 图像的类型转换
+>   
+>   使用 `-4` 表示图像色彩通道数为4，进行 rgba 图像的类型转换
+> 
+> + **图片路径参数** `< path/to/input/image`, `> path/to/output/image`
+>   
+>   重定向图片文件读写流到标准输入输出，详见使用例
+> 
+> + **临时文件参数** `-o`
+>   
+>   转换器默认会生成一个名为 `temp.rgb` 或 `temp.rgba` 的临时 rgb(a) 序列文件
+>   
+>   可以选择使用 `-o` 参数来忽略 (omit) 该临时文件
+> 
+> **【使用例】**
+> 
+> 将 `sample/rgb/` 文件夹下的 `pic1.qoi` 图片转换为 `picture.ppm` 图片并输出到当前文件夹，进行 rgb 图像解码测试
+> 
+> ```bash
+> ./conv -d -3 <sample/rgb/pic1.qoi >picture.ppm
+> ```
+> 
+> 将 `sample/rgb/` 文件夹下的 `pic2.ppm` 图片转换为 `pic.qoi` 图片并输出到 `out/` 文件夹（如果该文件夹存在），进行 rgb 图像编码测试，并忽略临时文件
+> 
+> ```bash
+> ./conv -e -3 <sample/rgb/pic2.ppm >out/pic.qoi -o
+> ```
+> 
+> 将 `sample/rgba/` 文件夹下的 `dice.qoi` 图片转换为 `dice.pam` 图片并输出到 `out/` 文件夹（如果该文件夹存在），进行 rgba 图像解码测试，并忽略临时文件
+> 
+> ```bash
+> ./conv -d -4 <sample/rgba/dice.qoi >out/dice.pam -o
+> ```
+> 
+> 将 `sample/rgba/` 文件夹下的 `logo.pam` 图片转换为 `logo.qoi` 图片并输出到当前文件夹，进行 rgba 图像编码测试
+> 
+> ```bash
+> ./conv -e -4 <sample/rgba/logo.pam >logo.qoi
+> ```
+
+运行 `./conv -h` 查看应用使用方法的详细说明
 
 ### 3. 检查转换结果是否正确
 
